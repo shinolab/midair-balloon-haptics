@@ -1,0 +1,3 @@
+[submodule "deps/dynamic-manipulation"]
+	path = deps/dynamic-manipulation
+	url = https://github.com/shinolab/dynamic-manipulation.git
