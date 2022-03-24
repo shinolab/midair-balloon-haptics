@@ -17,52 +17,6 @@
 
 using pcl_ptr = pcl::PointCloud<pcl::PointXYZ>::Ptr;
 
-void RegisterBehaviour(std::shared_ptr<dynaman::ActionHandler> handler){
-	pActionHandler->setOnTouch(
-		[&pObject, &pos_init, &pActionHandler]() {
-			pObject->updateStatesTarget(pos_init);
-			pActionHandler->setOnTouch([&pObject]() {
-				pObject->updateStatesTarget(Eigen::Vector3f(-200, 0, 0));
-				}
-			);
-		}
-	);
-
-	pActionHandler->setOnHold(
-			std::cout << "Translate to HOLD state" << std::endl;
-		}
-	);
-	pActionHandler->setOnRelease(
-			std::cout << "Translate to RELEASE state" << std::endl;
-		}
-	);
-	pActionHandler->setOnClick(
-		[ &pManipulator]() {
-			std::cout << "CLICK" << std::endl;
-			pManipulator->PauseManipulation();
-			std::this_thread::sleep_for(std::chrono::seconds(1));
-			pManipulator->ResumeManipulation();
-
-		}
-	);
-	pActionHandler->setAtHeldInit(
-		[&pObject]() {
-			pObject->updateStatesTarget(pObject->getPosition());
-		}
-	);
-	pActionHandler->setAtHeldFingerUp(
-		[&pObject]() {
-			std::cout << "Finger UP" << std::endl;
-		}
-	);
-	pActionHandler->setAtHeldFingerDown(
-		[&pObject]() {
-			std::cout << "Finger DOWN" << std::endl;
-		}
-	);
-}
-
-
 int main(int argc, char** argv) {
 
 	Eigen::Vector3f sensor_bias(30, 10, 0);
@@ -121,7 +75,49 @@ int main(int argc, char** argv) {
 	}
 
 	auto pActionHandler = dynaman::ActionHandler::create();
-	RegisterBehaviour(pActionHandler);
+
+	pActionHandler->setOnTouch(
+		[&pObject]() 
+		{
+			pObject->updateStatesTarget(Eigen::Vector3f(-200, 0, 0));
+		}
+	);
+
+	pActionHandler->setOnHold(
+		[]()
+		{
+			std::cout << "Translate to HOLD state" << std::endl;
+		}
+	);
+	pActionHandler->setOnRelease(
+		[]()
+		{
+			std::cout << "Translate to RELEASE state" << std::endl;
+		}
+	);
+	pActionHandler->setOnClick(
+		[&pManipulator]() {
+			std::cout << "CLICK" << std::endl;
+			pManipulator->PauseManipulation();
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+			pManipulator->ResumeManipulation();
+		}
+	);
+	pActionHandler->setAtHeldInit(
+		[&pObject]() {
+			pObject->updateStatesTarget(pObject->getPosition());
+		}
+	);
+	pActionHandler->setAtHeldFingerUp(
+		[]() {
+			std::cout << "Finger UP" << std::endl;
+		}
+	);
+	pActionHandler->setAtHeldFingerDown(
+		[]() {
+			std::cout << "Finger DOWN" << std::endl;
+		}
+	);
 
 	pcl_viewer viewer("pointcloud", 1280, 720);
 	while (viewer) {
