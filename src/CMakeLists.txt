@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.14)
 
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/deps)
+
 find_package(realsense2 REQUIRED)
 include_directories(${realsense2_INCLUDE_DIR})
 
@@ -18,6 +20,8 @@ add_definitions(${PCL_DEFINITIONS})
 
 include_directories(${PROJECT_SOURCE_DIR}/deps/dynamic-manipulation/inc)
 include_directories(${PROJECT_SOURCE_DIR}/deps/dynamic-manipulation/sample)
+include_directories(${PROJECT_SOURCE_DIR}/deps/dynamic-manipulation/deps/autd3-library-software/client/include)
+include_directories(${PROJECT_SOURCE_DIR}/deps/dynamic-manipulation/deps/autd3-library-software/client/lib)
 
 add_library(pcl_util pcl_util.hpp pcl_util.cpp)
 target_link_libraries(

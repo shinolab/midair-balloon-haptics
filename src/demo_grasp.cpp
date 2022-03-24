@@ -41,13 +41,8 @@ int main(int argc, char** argv) {
 	);
 
 	auto pManipulator = dynaman::MultiplexManipulator::Create(
-		20 * Eigen::Vector3f::Constant(1.6f), // gainP
-		5 * Eigen::Vector3f::Constant(4.0f), // gainD
-		1 * Eigen::Vector3f::Constant(0.05f), //gainI
-		100, //freqLM
-		10,
-		5,
-		0
+		pAupa,
+		pTracker
 	);
 	pManipulator->SetOnPause([&pAupa, &pObject](){
 		pAupa->AppendGainSync(autd::FocalPointGain::Create(pObject->getPosition()));
@@ -56,7 +51,7 @@ int main(int argc, char** argv) {
 		return;
 	});
 
-	pManipulator->StartManipulation(pAupa, pTracker, pObject);
+	pManipulator->StartManipulation(pObject);
 	std::this_thread::sleep_for(std::chrono::seconds(5)); // wait until stabilized
 
 	Eigen::Matrix3f rot_rs;
