@@ -109,12 +109,14 @@ int main(int argc, char** argv) {
 		}
 	);
 	pActionHandler->setAtHeldFingerUp(
-		[]() {
+		[&pObject]() {
+			pObject->updateStatesTarget(pObject->getPosition());
 			std::cout << "Finger UP" << std::endl;
 		}
 	);
 	pActionHandler->setAtHeldFingerDown(
-		[]() {
+		[&pObject]() {
+			pObject->updateStatesTarget(pObject->getPosition());
 			std::cout << "Finger DOWN" << std::endl;
 		}
 	);
