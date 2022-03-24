@@ -22,6 +22,7 @@ include_directories(${PROJECT_SOURCE_DIR}/deps/dynamic-manipulation/inc)
 include_directories(${PROJECT_SOURCE_DIR}/deps/dynamic-manipulation/sample)
 include_directories(${PROJECT_SOURCE_DIR}/deps/dynamic-manipulation/deps/autd3-library-software/client/include)
 include_directories(${PROJECT_SOURCE_DIR}/deps/dynamic-manipulation/deps/autd3-library-software/client/lib)
+include_directories(${XIMEA_INCLUDE_DIR})
 
 add_library(pcl_util pcl_util.hpp pcl_util.cpp)
 target_link_libraries(
