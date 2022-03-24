@@ -17,6 +17,51 @@
 
 using pcl_ptr = pcl::PointCloud<pcl::PointXYZ>::Ptr;
 
+void RegisterBehaviour(std::shared_ptr<dynaman::ActionHandler> handler){
+	pActionHandler->setOnTouch(
+		[&pObject, &pos_init, &pActionHandler]() {
+			pObject->updateStatesTarget(pos_init);
+			pActionHandler->setOnTouch([&pObject]() {
+				pObject->updateStatesTarget(Eigen::Vector3f(-200, 0, 0));
+				}
+			);
+		}
+	);
+
+	pActionHandler->setOnHold(
+			std::cout << "Translate to HOLD state" << std::endl;
+		}
+	);
+	pActionHandler->setOnRelease(
+			std::cout << "Translate to RELEASE state" << std::endl;
+		}
+	);
+	pActionHandler->setOnClick(
+		[ &pManipulator]() {
+			std::cout << "CLICK" << std::endl;
+			pManipulator->PauseManipulation();
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+			pManipulator->ResumeManipulation();
+
+		}
+	);
+	pActionHandler->setAtHeldInit(
+		[&pObject]() {
+			pObject->updateStatesTarget(pObject->getPosition());
+		}
+	);
+	pActionHandler->setAtHeldFingerUp(
+		[&pObject]() {
+			std::cout << "Finger UP" << std::endl;
+		}
+	);
+	pActionHandler->setAtHeldFingerDown(
+		[&pObject]() {
+			std::cout << "Finger DOWN" << std::endl;
+		}
+	);
+}
+
 
 int main(int argc, char** argv) {
 
@@ -36,7 +81,6 @@ int main(int argc, char** argv) {
 		pos_init,
 		Eigen::Vector3f::Constant(-250),
 		Eigen::Vector3f::Constant(250),
-		0,
 		50.f
 	);
 
@@ -77,68 +121,7 @@ int main(int argc, char** argv) {
 	}
 
 	auto pActionHandler = dynaman::ActionHandler::create();
-	
-	pActionHandler->setOnTouch(
-		[&pObject, &pos_init, &pActionHandler]() {
-			pObject->updateStatesTarget(pos_init);
-			pActionHandler->setOnTouch([&pObject]() {
-				pObject->updateStatesTarget(Eigen::Vector3f(-200, 0, 0));
-				}
-			);
-		}
-	);
-
-	pActionHandler->setOnHold(
-		[&pManipulator]() {
-			dynamic_cast<dynaman::MultiplexManipulator*>(pManipulator.get())->SetGain(
-				20 * Eigen::Vector3f::Constant(-1.6f), // gainP
-				5 * Eigen::Vector3f::Constant(-4.0f), // gainD
-				0 * Eigen::Vector3f::Constant(-0.05f) //gainI
-			);
-			std::cout << "Translate to HOLD state" << std::endl;
-		}
-	);
-	pActionHandler->setOnRelease(
-		[&pManipulator]() {
-			//pManipulator->ResumeManipulation();
-			dynamic_cast<dynaman::MultiplexManipulator*>(pManipulator.get())->SetGain(
-				20 * Eigen::Vector3f::Constant(-1.6f), // gainP
-				5 * Eigen::Vector3f::Constant(-4.0f), // gainD
-				1 * Eigen::Vector3f::Constant(-0.05f) //gainI
-			);
-			std::cout << "Translate to RELEASE state" << std::endl;
-		}
-	);
-	pActionHandler->setOnClick(
-		[&pActionHandler, &pObject, &pos_init]() {
-			std::cout << "CLICK" << std::endl;
-			//pActionHandler->setOnRelease([&pObject, &pos_init]() 
-			//	{
-			//		pObject->updateStatesTarget(pos_init);
-			//	}
-			//);
-		}
-	);
-	pActionHandler->setAtHeldInit(
-		[&pObject]() {
-			pObject->updateStatesTarget(pObject->getPosition());
-			//pObject->resetIntegral();
-		}
-	);
-	pActionHandler->setAtHeldFingerUp(
-		[&pObject]() {
-			pObject->updateStatesTarget(pObject->getPosition());
-			std::cout << "Finger UP" << std::endl;
-			//pObject->resetIntegral();
-		}
-	);
-	pActionHandler->setAtHeldFingerDown(
-		[&pObject]() {
-			pObject->updateStatesTarget(pObject->getPosition());
-			std::cout << "Finger DOWN" << std::endl;
-			//pObject->resetIntegral();
-		}
-	);
+	RegisterBehaviour(pActionHandler);
 
 	pcl_viewer viewer("pointcloud", 1280, 720);
 	while (viewer) {
