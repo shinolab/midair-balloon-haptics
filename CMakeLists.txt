@@ -8,5 +8,5 @@ set_property(GLOBAL PROPERTY USE_FOLDERS TRUE)
 
 project(midair-balloon-haptics)
 
-add_subdirectory(deps)
+add_subdirectory(deps/dynamic-manipulation)
 add_subdirectory(src)
