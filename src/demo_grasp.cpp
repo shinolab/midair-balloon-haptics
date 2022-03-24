@@ -136,12 +136,9 @@ int main(int argc, char** argv) {
 			auto pCloudBalloon = pcl_util::MakeSphere(posBalloon, pHandStateReader->RadiusObject());
 			auto pCloudColliderContact = pcl_util::MakeSphere(posBalloon, pHandStateReader->RadiusColliderContact());
 			auto pCloudInsideColliderClick = pHandStateReader->ExtractPointsInsideColliderClick(pCloud, posBalloon);
-			//auto pCloudColliderClick = pcl_util::MakeSphere(0.001f*posBalloon, pHandStateReader->RadiusColliderClick());
 			std::vector<pcl_util::pcl_ptr> cloudPtrs{
 				pCloud,
 				pCloudBalloon
-				//pCloudColliderContact,
-				//pCloudInsideColliderClick
 			};
 			viewer.draw(cloudPtrs);
 		}
