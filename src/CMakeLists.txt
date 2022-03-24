@@ -17,6 +17,7 @@ include_directories(${PCL_INCLUDE_DIR})
 add_definitions(${PCL_DEFINITIONS})
 
 include_directories(${PROJECT_SOURCE_DIR}/deps/dynamic-manipulation/inc)
+include_directories(${PROJECT_SOURCE_DIR}/deps/dynamic-manipulation/sample)
 
 add_library(pcl_util pcl_util.hpp pcl_util.cpp)
 target_link_libraries(
